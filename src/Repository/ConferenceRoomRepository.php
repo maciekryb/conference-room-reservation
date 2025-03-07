@@ -31,13 +31,20 @@ class ConferenceRoomRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ConferenceRoom
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       public function findOneBySomeField($value): ?ConferenceRoom
+       {
+           return $this->createQueryBuilder('c')
+               ->andWhere('c.exampleField = :val')
+               ->setParameter('val', $value)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+       }
+
+       public function save(ConferenceRoom $conferenceRoom): void
+       {
+           $entityManager = $this->getEntityManager();
+           $entityManager->persist($conferenceRoom);  // Przygotowuje obiekt do zapisu
+           $entityManager->flush();  // Zatwierdza zmiany w bazie danych
+       }
 }
