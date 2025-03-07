@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ConferenceRoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConferenceRoomRepository::class)]
@@ -16,9 +18,19 @@ class ConferenceRoom
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Name is required.")]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Name must be at least {{ limit }} characters long.",
+        maxMessage: "Name cannot be longer than {{ limit }} characters."
+    )]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Capacity is required.")]
+    #[Assert\Type(type: "numeric", message: "Capacity must be a number.")]
+    #[Assert\GreaterThan(value: 0, message: "Capacity must be greater than 0.")]
     private ?int $capacity = null;
 
     /**
@@ -49,12 +61,12 @@ class ConferenceRoom
         return $this;
     }
 
-    public function getCapacity(): ?int
+    public function getCapacity()
     {
         return $this->capacity;
     }
 
-    public function setCapacity(int $capacity): static
+    public function setCapacity($capacity): static
     {
         $this->capacity = $capacity;
 
