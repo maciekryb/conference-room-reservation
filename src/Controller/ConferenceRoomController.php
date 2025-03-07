@@ -20,9 +20,8 @@ final class ConferenceRoomController extends AbstractController
     {
         $this->conferenceRoomRepository = $conferenceRoomRepository;
     }
-            /**
-     * @Route("/api/conference-rooms", name="create_conference_room", methods={"POST"})
-     */
+
+    #[Route('/api/conference-rooms', name: 'create_conference_room', methods: ['POST'])]
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->toArray();
@@ -52,7 +51,7 @@ final class ConferenceRoomController extends AbstractController
             Response::HTTP_CREATED
         );
     }
-    
+
     #[Route('/conference/room', name: 'app_conference_room')]
     public function index(): JsonResponse
     {
