@@ -25,6 +25,10 @@ final class ConferenceRoomController extends AbstractController
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->toArray();
+        if (!isset($data['name']) || !isset($data['capacity'])) {
+            return $this->json(['error' => 'Both name and capacity are required.'], Response::HTTP_BAD_REQUEST);
+        }
+
         $conferenceRoom = new ConferenceRoom();
         $conferenceRoom->setName($data['name']);
         $conferenceRoom->setCapacity($data['capacity']);
@@ -52,6 +56,43 @@ final class ConferenceRoomController extends AbstractController
         );
     }
 
+    #[Route('/api/conference-rooms/{id}', name: 'edit_conference_room', methods: ['POST'])]
+    public function edit(int $id, Request $request, ValidatorInterface $validator): JsonResponse
+    {
+        $conferenceRoom = $this->conferenceRoomRepository->find($id);
+
+        if (!$conferenceRoom) {
+            return $this->json(['message' => 'Conference Room not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = $request->toArray();
+        if (!isset($data['name']) || !isset($data['capacity'])) {
+            return $this->json(['error' => 'Both name and capacity are required.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!is_numeric($data['capacity'])) {
+            return $this->json(['error' => 'Capacity must be a valid number.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $conferenceRoom->setName($data['name']);
+        $conferenceRoom->setCapacity($data['capacity']);
+
+        $errors = $validator->validate($conferenceRoom);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+        }
+
+
+
+        $this->conferenceRoomRepository->save($conferenceRoom);
+
+        return $this->json(['message' => 'Conference Room updated successfully']);
+    }
+
     #[Route('/conference/room', name: 'app_conference_room')]
     public function index(): JsonResponse
     {
@@ -60,7 +101,4 @@ final class ConferenceRoomController extends AbstractController
             'path' => 'src/Controller/ConferenceRoomController.php',
         ]);
     }
-
-
-
 }
