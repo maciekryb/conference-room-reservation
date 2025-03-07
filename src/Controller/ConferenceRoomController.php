@@ -85,13 +85,25 @@ final class ConferenceRoomController extends AbstractController
             }
             return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
-
-
-
         $this->conferenceRoomRepository->save($conferenceRoom);
 
         return $this->json(['message' => 'Conference Room updated successfully']);
     }
+
+    #[Route('/api/conference-rooms/{id}', name: 'edit_conference_room', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        $conferenceRoom = $this->conferenceRoomRepository->find($id);
+
+        if (!$conferenceRoom) {
+            return $this->json(['message' => 'Conference Room not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->conferenceRoomRepository->delete($conferenceRoom);
+
+        return $this->json(['message' => 'Conference Room deleted successfully']);
+    }
+
 
     #[Route('/conference/room', name: 'app_conference_room')]
     public function index(): JsonResponse
