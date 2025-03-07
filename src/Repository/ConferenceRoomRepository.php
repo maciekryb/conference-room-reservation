@@ -47,4 +47,11 @@ class ConferenceRoomRepository extends ServiceEntityRepository
            $entityManager->persist($conferenceRoom);  // Przygotowuje obiekt do zapisu
            $entityManager->flush();  // Zatwierdza zmiany w bazie danych
        }
+
+       public function delete(ConferenceRoom $conferenceRoom): void
+       {
+           $entityManager = $this->getEntityManager();
+           $entityManager->remove($conferenceRoom);  // Zaznacza obiekt do usunięcia
+           $entityManager->flush();  // Zatwierdza zmiany w bazie danych
+       }
 }
