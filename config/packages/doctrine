@@ -1,0 +1,7 @@
+doctrine:
+    dbal:
+        driver: 'pdo_pgsql'          # Określa, że korzystamy z PostgreSQL
+        server_version: '16'         # Określa wersję PostgreSQL, której używasz
+        charset: 'UTF8'              # Określa używany zestaw znaków (UTF-8)
+        url: '%env(DATABASE_URL)%'    # Wczytuje dane połączenia z pliku .env
+
