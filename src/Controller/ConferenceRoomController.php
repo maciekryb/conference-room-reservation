@@ -93,13 +93,4 @@ final class ConferenceRoomController extends AbstractController
         return $this->json(['message' => 'Conference Room deleted successfully']);
     }
 
-
-    #[Route('/conference/room', name: 'app_conference_room')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ConferenceRoomController.php',
-        ]);
-    }
 }
