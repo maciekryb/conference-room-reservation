@@ -30,25 +30,21 @@ class ReservationController extends AbstractController
 
         $roomId = $data['conferenceRoomId'] ?? null;
         if (!$roomId) {
-            return $this->json(['message' => 'Conference room id required'], Response::HTTP_NOT_FOUND);
+            return $this->json(['message' => 'Conference room id required'], Response::HTTP_BAD_REQUEST);
         }
         $conferenceRoom = $this->conferenceRoomRepository->find($roomId);
         if (!$conferenceRoom) {
             return $this->json(['message' => 'Conference room not found'], Response::HTTP_NOT_FOUND);
         }
 
-        try {
-            $startTime = new \DateTime($data['startTime']);
-            $endTime = new \DateTime($data['endTime']);
-        } catch (\Exception $e) {
-            return $this->json([
-                'message' => 'Invalid date format.',
-            ], Response::HTTP_BAD_REQUEST);
+        $startTime = new \DateTime($data['startTime']);
+        $endTime = new \DateTime($data['endTime']);
+        if (!$startTime || !$endTime) {
+            return $this->json(['message' => 'Invalid date format.'], Response::HTTP_BAD_REQUEST);
         }
-        
+
         $reservedRoomId = $data['conferenceRoomId'] ?? null;
         $reservedBy = $data['reservedBy'] ?? null;
-
 
         $reservation = new Reservation();
         $reservation->setStartTime($startTime);
