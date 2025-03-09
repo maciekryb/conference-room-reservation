@@ -37,20 +37,18 @@ class ReservationController extends AbstractController
             return $this->json(['message' => 'Conference room not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $startTime = new \DateTime($data['startTime']);
-        $endTime = new \DateTime($data['endTime']);
-        if (!$startTime || !$endTime) {
+        try {
+            $startTime = new \DateTime($data['startTime'] ?? '');
+            $endTime = new \DateTime($data['endTime'] ?? '');
+        } catch (\Exception $e) {
             return $this->json(['message' => 'Invalid date format.'], Response::HTTP_BAD_REQUEST);
         }
-
-        $reservedRoomId = $data['conferenceRoomId'] ?? null;
-        $reservedBy = $data['reservedBy'] ?? null;
 
         $reservation = new Reservation();
         $reservation->setStartTime($startTime);
         $reservation->setEndTime($endTime);
-        $reservation->setConferenceRoomId($reservedRoomId);
-        $reservation->setReservedBy($reservedBy);
+        $reservation->setConferenceRoomId($roomId);
+        $reservation->setReservedBy($data['reservedBy'] ?? null);
 
         $errors = $validator->validate($reservation);
         if (count($errors) > 0) {
@@ -58,31 +56,39 @@ class ReservationController extends AbstractController
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-
             return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
-        $existingReservations = $this->reservationRepository->findByRoomAndTime($roomId, $startTime, $endTime);
-
-        if ($existingReservations) {
-            $conflictingReservations = [];
-            // Zbieramy wszystkie kolidujące rezerwacje
-            foreach ($existingReservations as $reservation) {
-                $conflictingReservations[] = [
-                    'reservedBy' => $reservation->getReservedBy(),
-                    'startTime' => $reservation->getStartTime()->format('Y-m-d H:i:s'),
-                    'endTime' => $reservation->getEndTime()->format('Y-m-d H:i:s'),
-                ];
-            }
-            // Zwracamy wszystkie kolidujące rezerwacje w odpowiedzi
-            return $this->json([
-                'message' => 'The room is already reserved during this time.',
-                'existingReservations' => $conflictingReservations,
-            ], Response::HTTP_CONFLICT);
+        $conflictResponse = $this->checkForConflictingReservations($roomId, $startTime, $endTime);
+        if ($conflictResponse) {
+            return $conflictResponse;
         }
 
         $this->reservationRepository->save($reservation);
 
         return $this->json(['message' => 'Reservation created successfully']);
+    }
+
+    private function checkForConflictingReservations(int $roomId, \DateTime $startTime, \DateTime $endTime): ?JsonResponse
+    {
+        $existingReservations = $this->reservationRepository->findByRoomAndTime($roomId, $startTime, $endTime);
+
+        if (!$existingReservations) {
+            return null;
+        }
+
+        $conflictingReservations = [];
+        foreach ($existingReservations as $reservation) {
+            $conflictingReservations[] = [
+                'reservedBy' => $reservation->getReservedBy(),
+                'startTime' => $reservation->getStartTime()->format('Y-m-d H:i:s'),
+                'endTime' => $reservation->getEndTime()->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        return $this->json([
+            'message' => 'The room is already reserved during this time.',
+            'existingReservations' => $conflictingReservations,
+        ], Response::HTTP_CONFLICT);
     }
 }
