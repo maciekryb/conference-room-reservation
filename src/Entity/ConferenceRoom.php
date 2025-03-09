@@ -84,25 +84,4 @@ class ConferenceRoom
         return $this->reservations;
     }
 
-    public function addReservation(Reservation $reservation): static
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setConferenceRoom($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getConferenceRoom() === $this) {
-                $reservation->setConferenceRoom(null);
-            }
-        }
-
-        return $this;
-    }
 }
