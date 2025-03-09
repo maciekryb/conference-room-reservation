@@ -24,17 +24,17 @@ class ReservationRepository extends ServiceEntityRepository
     }
 
     // Sprawdzamy, czy sala jest dostępna w danym przedziale czasowym
-    public function findByRoomAndTime($roomId, $startTime, $endTime): ?Reservation
+    public function findByRoomAndTime($roomId, $startTime, $endTime)
     {
         return $this->createQueryBuilder('r')
-            ->where('r.conference_room_id = :room')  // Odwołujemy się do kolumny conference_room_id
-            ->andWhere('r.start_time < :endTime')  // Rezerwacja zaczyna się przed końcem nowej rezerwacji
-            ->andWhere('r.end_time > :startTime')  // Rezerwacja kończy się po rozpoczęciu nowej rezerwacji
-            ->setParameter('room', $roomId) 
-            ->setParameter('startTime', $startTime)  // Używamy poprawnej nazwy parametru
-            ->setParameter('endTime', $endTime)  // Używamy poprawnej nazwy parametru
+            ->where('r.conference_room_id = :room')
+            ->andWhere('r.start_time < :endTime')
+            ->andWhere('r.end_time > :startTime')
+            ->setParameter('room', $roomId)
+            ->setParameter('startTime', $startTime)
+            ->setParameter('endTime', $endTime)
             ->getQuery()
-            ->getOneOrNullResult();  // Zwracamy jedną rezerwację lub null, jeśli nie ma konfliktu
+            ->getResult();
     }
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
