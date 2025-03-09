@@ -16,6 +16,26 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+    public function save(Reservation $reservation): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+    }
+
+    // Sprawdzamy, czy sala jest dostępna w danym przedziale czasowym
+    public function findByRoomAndTime($roomId, $startTime, $endTime): ?Reservation
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.conference_room_id = :room')  // Odwołujemy się do kolumny conference_room_id
+            ->andWhere('r.start_time < :endTime')  // Rezerwacja zaczyna się przed końcem nowej rezerwacji
+            ->andWhere('r.end_time > :startTime')  // Rezerwacja kończy się po rozpoczęciu nowej rezerwacji
+            ->setParameter('room', $roomId) 
+            ->setParameter('startTime', $startTime)  // Używamy poprawnej nazwy parametru
+            ->setParameter('endTime', $endTime)  // Używamy poprawnej nazwy parametru
+            ->getQuery()
+            ->getOneOrNullResult();  // Zwracamy jedną rezerwację lub null, jeśli nie ma konfliktu
+    }
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
     //     */
