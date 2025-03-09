@@ -76,12 +76,8 @@ class ConferenceRoom
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reservation>
-     */
     public function getReservations(): Collection
     {
         return $this->reservations;
     }
-
 }

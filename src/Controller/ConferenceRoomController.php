@@ -92,5 +92,4 @@ final class ConferenceRoomController extends AbstractController
 
         return $this->json(['message' => 'Conference Room deleted successfully']);
     }
-
 }
