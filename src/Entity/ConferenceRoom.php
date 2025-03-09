@@ -31,6 +31,9 @@ class ConferenceRoom
     #[Assert\NotBlank(message: "Capacity is required.")]
     #[Assert\Type(type: "numeric", message: "Capacity must be a number.")]
     #[Assert\GreaterThan(value: 0, message: "Capacity must be greater than 0.")]
+    #[Assert\LessThanOrEqual(value: 2147483647, message: "Capacity must be at most 2,147,483,647.")]
+
+
     private ?int $capacity = null;
 
     /**
@@ -54,7 +57,7 @@ class ConferenceRoom
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -66,7 +69,7 @@ class ConferenceRoom
         return $this->capacity;
     }
 
-    public function setCapacity($capacity): static
+    public function setCapacity(?int $capacity): static
     {
         $this->capacity = $capacity;
 
