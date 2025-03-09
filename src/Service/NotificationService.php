@@ -19,7 +19,7 @@ class NotificationService
         $message = [
             'reservationId' => $reservation->getId(),
             'action' => $action,
-            'roomName' => $reservation->getConferenceRoomId(),
+            'roomId' => $reservation->getConferenceRoomId(),
             'personName' => $reservation->getReservedBy(),
             'startDate' => $reservation->getStartTime()->format('Y-m-d H:i:s'),
             'endDate' => $reservation->getEndTime()->format('Y-m-d H:i:s'),
