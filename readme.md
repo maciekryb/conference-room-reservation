@@ -18,6 +18,8 @@ System wspiera również powiadomienia o nowych rezerwacjach, które są przesy�
 - Composer
 - Symfony 7.2+
 - PostgreSQL
+- Docker (dla RabbitMQ)
+- RabbitMQ (można uruchomić za pomocą Dockera)
 
 ## Instalacja
 
@@ -68,7 +70,19 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-### Krok 5: Uruchomienie serwera
+### Krok 5: Uruchomienie RabbitMQ
+1. Skonfiguruj RabbitMQ: Upewnij się, że RabbitMQ jest uruchomione i dostępne w systemie. Możesz użyć domyślnych ustawień:
+
+```bash
+RABBITMQ_URL=amqp://localhost
+```
+2. Uruchom RabbitMQ za pomocą Dockera:
+```bash
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
+
+
+### Krok 6: Uruchomienie serwera
 1. Uruchom lokalny serwer Symfony:
 
 ```bash
@@ -77,7 +91,7 @@ php bin/console server:run
 
 Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000`.
 
-### Krok 6: Testowanie API
+### Krok 7: Testowanie API
 1. Możesz przetestować API używając Postmana lub CURL:
    Przykładowe żądanie POST do tworzenia rezerwacji:
 
