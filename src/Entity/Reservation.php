@@ -29,6 +29,7 @@ class Reservation
     private ?string $reserved_by = null;
 
     #[ORM\Column(name: "conference_room_id")]
+    #[Assert\NotBlank(message: "Conference room id is required.")]
     private ?int $conference_room_id = null;
 
     public function getId(): ?int
