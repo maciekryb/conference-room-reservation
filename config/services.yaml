@@ -19,8 +19,8 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\Consumer\ReservationConsumer:
+    App\Service\NotificationService:
         arguments:
-            $serializer: '@serializer'
+            $reservationNotificationProducer: '@old_sound_rabbit_mq.reservation_notification_producer'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

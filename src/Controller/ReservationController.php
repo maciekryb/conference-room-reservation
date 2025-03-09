@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
 use App\Repository\ConferenceRoomRepository;
+use App\Service\NotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,16 @@ class ReservationController extends AbstractController
 {
     private $reservationRepository;
     private $conferenceRoomRepository;
+    private $notificationService;
 
-    public function __construct(ReservationRepository $reservationRepository, ConferenceRoomRepository $conferenceRoomRepository)
-    {
+    public function __construct(
+        ReservationRepository $reservationRepository,
+        ConferenceRoomRepository $conferenceRoomRepository,
+        NotificationService  $notificationService
+    ) {
         $this->reservationRepository = $reservationRepository;
         $this->conferenceRoomRepository = $conferenceRoomRepository;
+        $this->notificationService = $notificationService;
     }
 
     #[Route('/api/reservations', name: 'create_reservation', methods: ['POST'])]
@@ -65,8 +71,9 @@ class ReservationController extends AbstractController
         }
 
         $this->reservationRepository->save($reservation);
+        $this->notificationService->sendReservationNotification($reservation, 'created');
 
-        return $this->json(['message' => 'Reservation created successfully']);
+        return $this->json(['message' => 'Reservation created and notification sent']);
     }
 
     private function checkForConflictingReservations(int $roomId, \DateTime $startTime, \DateTime $endTime): ?JsonResponse

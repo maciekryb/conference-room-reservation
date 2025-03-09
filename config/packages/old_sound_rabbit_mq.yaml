@@ -1,15 +1,28 @@
 old_sound_rabbit_mq:
-    connections:
-        default:
-            url: '%env(RABBITMQ_URL)%'
-#    producers:
-#        # use 'old_sound_rabbit_mq.task_producer' service to send data.
-#        task:
-#            connection:       default
-#            exchange_options: { name: 'task', type: direct }
-#    consumers:
-#        task:
-#            connection:       default
-#            exchange_options: { name: 'task', type: direct }
-#            queue_options:    { name: 'task'}
-#            callback:         App\Consumer\TaskConsumer
+  connections:
+    default:
+      host: "localhost"
+      port: 5672
+      user: "guest"
+      password: "guest"
+      vhost: "/"
+      lazy: true
+      connection_timeout: 3
+      read_write_timeout: 3
+
+  producers:
+    reservation_notification:
+      connection: default
+      exchange_options:
+        name: "reservation_notifications"
+        type: direct
+
+  consumers:
+    reservation_notification:
+      connection: default
+      exchange_options:
+        name: "reservation_notifications"
+        type: direct
+      queue_options:
+        name: "reservation_notifications"
+      callback: App\Consumer\ReservationNotificationConsumer
