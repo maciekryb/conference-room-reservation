@@ -19,13 +19,14 @@ class Reservation
     #[ORM\Column(type: "datetime")]
     #[Assert\NotBlank(message: "Start time is required.")]
     private ?\DateTimeInterface $start_time = null;
-    
+
     #[ORM\Column(type: "datetime")]
     #[Assert\NotBlank(message: "End time is required.")]
     #[Assert\GreaterThan(propertyPath: "start_time", message: "End time must be after start time.")]
     private ?\DateTimeInterface $end_time = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Reserved by is required.")]
     private ?string $reserved_by = null;
 
     #[ORM\Column(name: "conference_room_id")]
@@ -66,7 +67,7 @@ class Reservation
         return $this->reserved_by;
     }
 
-    public function setReservedBy(string $reserved_by): static
+    public function setReservedBy(?string $reserved_by): static
     {
         $this->reserved_by = $reserved_by;
 
