@@ -15,41 +15,25 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: "datetime")]
-    #[Assert\NotBlank(message: "Reservation date is required.")]
-    private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(type: "time")]
+    #[ORM\Column(type: "datetime")]
     #[Assert\NotBlank(message: "Start time is required.")]
     private ?\DateTimeInterface $start_time = null;
-
-    #[ORM\Column(type: "time")]
+    
+    #[ORM\Column(type: "datetime")]
     #[Assert\NotBlank(message: "End time is required.")]
-    #[Assert\GreaterThan(propertyPath: "startTime", message: "End time must be after start time.")]
+    #[Assert\GreaterThan(propertyPath: "start_time", message: "End time must be after start time.")]
     private ?\DateTimeInterface $end_time = null;
 
     #[ORM\Column(length: 255)]
     private ?string $reserved_by = null;
 
-    #[ORM\ManyToOne(targetEntity: ConferenceRoom::class, inversedBy: "reservations")]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ConferenceRoom $conferenceRoom = null;
+    #[ORM\Column(name: "conference_room_id")]
+    private ?int $conference_room_id = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
     }
 
     public function getStartTime(): ?\DateTimeInterface
@@ -88,14 +72,14 @@ class Reservation
         return $this;
     }
 
-    public function getConferenceRoom(): ?ConferenceRoom
+    public function getConferenceRoomId(): ?int
     {
-        return $this->conferenceRoom;
+        return $this->conference_room_id;
     }
 
-    public function setConferenceRoom(?ConferenceRoom $conferenceRoom): static
+    public function setConferenceRoomId(?int $conference_room_id): static
     {
-        $this->conferenceRoom = $conferenceRoom;
+        $this->conference_room_id = $conference_room_id;
 
         return $this;
     }
