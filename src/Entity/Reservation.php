@@ -3,8 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -14,19 +15,23 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: "datetime")]
+    #[Assert\NotBlank(message: "Reservation date is required.")]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
+    #[Assert\NotBlank(message: "Start time is required.")]
     private ?\DateTimeInterface $start_time = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
+    #[Assert\NotBlank(message: "End time is required.")]
+    #[Assert\GreaterThan(propertyPath: "startTime", message: "End time must be after start time.")]
     private ?\DateTimeInterface $end_time = null;
 
     #[ORM\Column(length: 255)]
     private ?string $reserved_by = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\ManyToOne(targetEntity: ConferenceRoom::class, inversedBy: "reservations")]
     #[ORM\JoinColumn(nullable: false)]
     private ?ConferenceRoom $conferenceRoom = null;
 
