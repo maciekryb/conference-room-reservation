@@ -22,7 +22,7 @@ class ReservationNotificationConsumer implements ConsumerInterface
 
             $this->logger->info('Reservation notification received', [
                 'action' => $data['action'],
-                'roomId' => $data['roomId'],
+                'roomName' => $data['roomName'],
                 'personName' => $data['personName'],
                 'startDate' => $data['startDate'],
                 'endDate' => $data['endDate'],
