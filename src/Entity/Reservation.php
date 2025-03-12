@@ -14,7 +14,6 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-
     #[ORM\Column(type: "datetime")]
     #[Assert\NotBlank(message: "Start time is required.")]
     private ?\DateTimeInterface $start_time = null;
@@ -28,9 +27,13 @@ class Reservation
     #[Assert\NotBlank(message: "Reserved by is required.")]
     private ?string $reserved_by = null;
 
-    #[ORM\Column(name: "conference_room_id")]
-    #[Assert\NotBlank(message: "Conference room id is required.")]
-    private ?int $conference_room_id = null;
+    // #[ORM\Column(name: "conference_room_id")]
+    // #[Assert\NotBlank(message: "Conference room id is required.")]
+    // private ?int $conference_room_id = null;
+
+    #[ORM\ManyToOne(targetEntity: ConferenceRoom::class)]
+    #[ORM\JoinColumn(name: "conference_room_id", referencedColumnName: "id", nullable: false)]
+    private ?ConferenceRoom $conferenceRoom = null;
 
     public function getId(): ?int
     {
@@ -73,14 +76,14 @@ class Reservation
         return $this;
     }
 
-    public function getConferenceRoomId(): ?int
+    public function getConferenceRoom(): ?ConferenceRoom
     {
-        return $this->conference_room_id;
+        return $this->conferenceRoom;
     }
 
-    public function setConferenceRoomId(?int $conference_room_id): static
+    public function setConferenceRoom(?ConferenceRoom $conferenceRoom): static
     {
-        $this->conference_room_id = $conference_room_id;
+        $this->conferenceRoom = $conferenceRoom;
 
         return $this;
     }
