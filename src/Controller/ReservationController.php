@@ -53,7 +53,7 @@ class ReservationController extends AbstractController
         $reservation = new Reservation();
         $reservation->setStartTime($startTime);
         $reservation->setEndTime($endTime);
-        $reservation->setConferenceRoomId($roomId);
+        $reservation->setConferenceRoom($conferenceRoom);
         $reservation->setReservedBy($data['reservedBy'] ?? null);
 
         $errors = $validator->validate($reservation);
