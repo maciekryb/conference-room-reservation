@@ -29,7 +29,6 @@ class ReservationController extends AbstractController
         $this->notificationService = $notificationService;
     }
 
-    #[Route('/api/reservations', name: 'create_reservation', methods: ['POST'])]
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->toArray();

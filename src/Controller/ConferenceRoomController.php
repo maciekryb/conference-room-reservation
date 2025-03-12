@@ -22,7 +22,6 @@ final class ConferenceRoomController extends AbstractController
         $this->conferenceRoomRepository = $conferenceRoomRepository;
     }
 
-    #[Route('/api/conference-rooms', name: 'create_conference_room', methods: ['POST'])]
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->toArray();
@@ -52,7 +51,6 @@ final class ConferenceRoomController extends AbstractController
         );
     }
 
-    #[Route('/api/conference-rooms/{id}', name: 'edit_conference_room', methods: ['POST'])]
     public function edit(int $id, Request $request, ValidatorInterface $validator): JsonResponse
     {
         $conferenceRoom = $this->conferenceRoomRepository->find($id);
@@ -79,7 +77,6 @@ final class ConferenceRoomController extends AbstractController
         return $this->json(['message' => 'Conference Room updated successfully']);
     }
 
-    #[Route('/api/conference-rooms/{id}', name: 'delete_conference_room', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $conferenceRoom = $this->conferenceRoomRepository->find($id);

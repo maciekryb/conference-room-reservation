@@ -1,5 +1,19 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+conference_room_create:
+    path: /api/conference-rooms
+    controller: App\Controller\ConferenceRoomController::create
+    methods: POST
+
+conference_room_edit:
+    path: /api/conference-rooms/{id}
+    controller: App\Controller\ConferenceRoomController::edit
+    methods: POST
+
+conference_room_delete:
+    path: /api/conference-rooms/{id}
+    controller: App\Controller\ConferenceRoomController::delete
+    methods: DELETE
+
+create_reservation:
+    path: /api/reservations
+    controller: App\Controller\ReservationController::create
+    methods: POST
