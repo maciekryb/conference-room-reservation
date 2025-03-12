@@ -23,13 +23,13 @@ class ReservationRepository extends ServiceEntityRepository
         $entityManager->flush();
     }
 
-    public function findByRoomAndTime($roomId, $startTime, $endTime)
+    public function findByRoomAndTime($conferenceRoom, $startTime, $endTime)
     {
         return $this->createQueryBuilder('r')
-            ->where('r.conference_room_id = :room')
+            ->where('r.conferenceRoom = :room')
             ->andWhere('r.start_time < :endTime')
             ->andWhere('r.end_time > :startTime')
-            ->setParameter('room', $roomId)
+            ->setParameter('room', $conferenceRoom)
             ->setParameter('startTime', $startTime)
             ->setParameter('endTime', $endTime)
             ->getQuery()
