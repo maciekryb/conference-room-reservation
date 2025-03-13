@@ -32,13 +32,8 @@ class ConferenceRoom
     #[Assert\Type(type: "numeric", message: "Capacity must be a number.")]
     #[Assert\GreaterThan(value: 0, message: "Capacity must be greater than 0.")]
     #[Assert\LessThanOrEqual(value: 2147483647, message: "Capacity must be at most 2,147,483,647.")]
-
-
     private ?int $capacity = null;
 
-    /**
-     * @var Collection<int, Reservation>
-     */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'conferenceRoom')]
     private Collection $reservations;
 
